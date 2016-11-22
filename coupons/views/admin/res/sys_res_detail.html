@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>系统资源明细</title>
+</head>
+
+<body>
+    <form id="sysRes_detail_from" method="post">
+        <table border=1 bordercolor=#dbe1eb style="border-collapse:collapse;width: 100%;height: auto;" class="table">
+            <tr style="height: 40px;">
+                <th style="text-align: center;">上级资源<span style="margin-left:16px;cursor: pointer;color:#ff0000;" onClick="zTreeObjBySysResEdit.cancelSelectedNode();$('input[name=Parent]').val('0')">X</span></th>
+                <th style="text-align: center;" colspan="4">系统资源信息</th>
+            </tr>
+            <tr>
+                <td rowspan="6" height="40px">
+                    <ul id="parentTreeMenuDetailBySysRes" style="width: 100%;height: 100%;" class="ztree" />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">资源名称：</td>
+                <td>
+                    <input class="easyui-validatebox" data-options="required:false" value="{{.SysRes.Name}}" />
+                </td>
+                <td style="text-align: right;">排序号：</td>
+                <td>
+                    <input class="easyui-numberbox" value="{{.SysRes.Seqno}}" />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">资源路径：</td>
+                <td colspan="3">
+                    <input style="width: 99%;" class="easyui-validatebox" value="{{.SysRes.Respath}}" />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">创建人：</td>
+                <td>
+                    <input class="easyui-validatebox" data-options="required:true" value="{{.SysRes.Creatername}}" />
+                </td>
+                <td style="text-align: right;">创建日期：</td>
+                <td>
+                    <input class="easyui-validatebox" value={{date .SysRes.Changedate "Y-m-d H:i:s"}} />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">修改人：</td>
+                <td>
+                    <input class="easyui-validatebox" data-options="required:false" value="{{.SysRes.Changename}}" />
+                </td>
+                <td style="text-align: right;">最后修改日期：</td>
+                <td>
+                    <input class="easyui-validatebox" value={{date .SysRes.Changedate "Y-m-d H:i:s"}} />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">备注：</td>
+                <td colspan="3">
+                    <textarea style="width: 99%;height: 100px;position: relative;resize:none;" class="easyui-validatebox">{{.SysRes.Remark}}</textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+    $(function() {
+        var SettingBySysResDetail = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "Id",
+                    pIdKey: "Parent",
+                    rootPId: 0
+                },
+                key: {
+                    name: "Name"
+                }
+            }
+        };
+        //初始化菜单
+        $.get("sysRes/queryNotThreeMenu", function(data) {
+            var zTreeObjBySysResDetail = $.fn.zTree.init($("#parentTreeMenuDetailBySysRes"), SettingBySysResDetail, data);
+            //选中当前父类节点
+            var node = zTreeObjBySysResEdit.getNodeByParam("Id", {{.SysRes.Parent}}, null);
+            if (node) {
+                zTreeObjBySysResEdit.selectNode(node);
+            }
+        });
+    });
+    </script>
+</body>
+
+</html>

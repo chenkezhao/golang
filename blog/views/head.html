@@ -1,0 +1,158 @@
+<style type="text/css">
+#img {
+    width: 100px;
+    height: 100px;
+    background: #fff;
+    margin-left: 24px;
+    border-radius: 50px;
+    box-shadow: 0px 0px 1px 2px #000;
+    text-align: center;
+    -webkit-animation: imgRotate 5s infinite linear forwards;
+    -moz-animation: imgRotate 5s infinite linear forwards;
+    animation: imgRotate 5s infinite linear forwards;
+}
+
+#img>img {
+    border-radius: 50px;
+}
+
+@-webkit-keyframes imgRotate {
+    0% {
+        -webkit-transform: rotate(0deg);
+        opacity: 1;
+    }
+    30% {
+        -webkit-transform: rotate(120deg);
+        opacity: 0.7;
+    }
+    60% {
+        -webkit-transform: rotate(240deg);
+        opacity: 0.8;
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        opacity: 1;
+    }
+}
+
+@-o-keyframes imgRotate {
+    0% {
+        -webkit-transform: rotate(0deg);
+        opacity: 1;
+    }
+    30% {
+        -webkit-transform: rotate(120deg);
+        opacity: 0.7;
+    }
+    60% {
+        -webkit-transform: rotate(240deg);
+        opacity: 0.8;
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        opacity: 1;
+    }
+}
+
+@-moz-keyframes imgRotate {
+    0% {
+        -webkit-transform: rotate(0deg);
+        opacity: 1;
+    }
+    30% {
+        -webkit-transform: rotate(120deg);
+        opacity: 0.7;
+    }
+    60% {
+        -webkit-transform: rotate(240deg);
+        opacity: 0.8;
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        opacity: 1;
+    }
+}
+
+@keyframes imgRotate {
+    0% {
+        -webkit-transform: rotate(0deg);
+        opacity: 1;
+    }
+    30% {
+        -webkit-transform: rotate(120deg);
+        opacity: 0.7;
+    }
+    60% {
+        -webkit-transform: rotate(240deg);
+        opacity: 0.8;
+    }
+    100% {
+        -webkit-transform: rotate(360deg);
+        opacity: 1;
+    }
+}
+#themebar>li{
+    margin-right: 24px;
+}
+.themeblock{
+
+}
+</style>
+<div style="width: 100%;height: 100%;">
+    <div style="width: 50%;height: 100%;border: 1px;float: left;">
+        <div style="width: 100%;height: 50%;">
+            <div id="img">
+                <img src="{{.BlogIconPath}}" style="width: 100%;height: 100%;" ondblclick="window.location = '/blog/admin'">
+            </div>
+        </div>
+        <div style="width: 100%;height: 50%;">
+            <h1 style="margin-left: 24px;" class="text-primary-color">{{.BlogTitle}}</h1>
+        </div>
+    </div>
+    <div style="width: 50%;height: 100%;border: 1px;float: left;">
+        <div style="width: 100%;height: 50%;">
+            <ul id="themebar" style="display: inline-flex;list-style-type: none;padding: 0px;margin: 0px;float: right;margin-top: 6px;">
+                <li>
+                    <div style="width: 15px;
+                        height: 15px;
+                        background: #388e3c;
+                        box-shadow: 0px 0px 2px 2px #ffc107;
+                        cursor: pointer;"></div>
+                </li>
+                <li>
+                    <div style="width: 15px;
+                        height: 15px;
+                        background: #512da8;
+                        box-shadow: 0px 0px 2px 2px #7c4dff;
+                        cursor: pointer;"></div>
+                </li>
+                <li>
+                    <div style="width: 15px;
+                        height: 15px;
+                        background: #f44336;
+                        box-shadow: 0px 0px 2px 2px #cddc39;
+                        cursor: pointer;"></div>
+                </li>
+                <li>
+                    <div style="width: 15px;
+                        height: 15px;
+                        background: #8bc34a;
+                        box-shadow: 0px 0px 2px 2px #cddc39;
+                        cursor: pointer;"></div>
+                </li>
+            </ul>
+        </div>
+        <div style="z-index: 1000;width: 100%;height: 50%;">
+            <div style="width: 100%;height: 100%;margin-top: 30px;">
+                <a href="/blog/index/1"><i class="icon iconfont accent-text-color" onMouseDown="this.className='icon iconfont accent-text-color'"  title="首页">&#xe631;</i></a>
+                <a href="/blog/guidang/1/1"><i class="icon iconfont accent-text-color" onMouseDown="this.className='icon iconfont accent-text-color'" title="归档">&#xe604;</i></a>
+                <a href="/blog/article/n/1"><i class="icon iconfont accent-text-color" onMouseDown="this.className='icon iconfont accent-text-color'" title="随便看看">&#xe6fd;</i></a> 
+                {{if .IsAdmin}}
+                    <a href="/blog/edit"><i class="icon iconfont accent-text-color" onMouseDown="this.className='icon iconfont accent-text-color'" title="编辑">&#xe68c;</i></a>
+                    <a href="/blog/loginLogs" style="line-height: 122px;color: #b10000;"><u>LoginLogs</u></a> 
+                    <a href="/blog/exitEdit" style="line-height: 122px;color: #b10000;"><u>退出</u></a> 
+                {{end}}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,46 @@
+<div style="padding: 24px;">
+    <div class="article_title">
+        <h1 style="text-align: left;">
+			<span><a href="javaScript:">{{.Article.Title}}</a></span>
+		</h1>
+    </div>
+    <ul class="actionBar">
+        {{if .Category}}
+            <li><a  class="categoryFlag primary-text-color" href="/blog/guidang/{{.Category.Id}}/1" style="text-decoration:none">{{.Category.Name}}</a></li>
+            {{if $.IsAdmin}}
+                <li class="categoryFlag"><a class="categoryFlag primary-text-color" href="/blog/editArticle/{{.Article.Id}}"><u>编辑</u></a></li>
+                <li class="categoryFlag" onclick="delArticle('{{.Article.Id}}')"><u>删除</u></li>
+            {{end}}
+        {{end}}
+    </ul>
+    <div><span>{{date .Article.Time "Y-m-d H:i:s"}}</span></div>
+</div>
+<div id="article_content" class="article_content" style="padding: 24px;">
+    {{str2html .Article.Content}}
+</div>
+<!-- 下一页 -->
+<div>
+    {{template "pagination.html"}}
+</div>
+<script type="text/javascript">
+var currentNum = 1;
+
+function nextPage(type) {
+
+    var url = document.URL;
+    var num = url.substr(url.lastIndexOf("/") + 1)
+    var chekNum = /[0-9]*/;
+    if ((num = chekNum.exec(num)) != null) {
+        currentNum = num;
+    }
+    if ("next" == type) {
+        currentNum++;
+    } else {
+        if (currentNum > 1) {
+            currentNum--;
+        }
+    }
+
+    window.location = "/blog/article/n/" + currentNum;
+}
+</script>

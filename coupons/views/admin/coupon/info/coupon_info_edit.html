@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>修改轮滚图片</title>
+</head>
+
+<body>
+    <form id="couponInfo_edit_from" method="post"   enctype="multipart/form-data">
+        <table border=1 bordercolor=#dbe1eb style="border-collapse:collapse;width: 100%;height: auto;" class="table">
+            <tr style="height: 40px;">
+                <td style="text-align: right;">标题：</td>
+                <td>
+                    <input type="hidden" name="Id" value="{{.Obj.Id}}">
+                    <input name="Title" class="easyui-validatebox" data-options="required:true"  value="{{.Obj.Title}}"/>
+                </td>
+                <td style="text-align: right;">子标题：</td>
+                <td>
+                    <input name="Subtitle" class="easyui-validatebox"  value="{{.Obj.Subtitle}}"/>
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">优惠券链接：</td>
+                <td>
+                    <input name="Couponslink" class="easyui-validatebox" data-options="required:true"  value="{{.Obj.Couponslink}}"/>
+                </td>
+                <td style="text-align: right;">下单链接：</td>
+                <td>
+                    <input name="Buylink" class="easyui-validatebox"  value="{{.Obj.Buylink}}"/>
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">排序号：</td>
+                <td>
+                    <input name="Seqno" class="easyui-numberbox"  value="{{.Obj.Seqno}}"/>
+                </td>
+                <td style="text-align: right;">状态：</td>
+                <td>
+                    <input name="Status" data-options="required:true" value="{{.Obj.Status}}"/>
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">分类：</td>
+                <td>
+                    <input name="categoryid" data-options="required:true" value="{{.Obj.Categoryid.Id}}" />
+                </td>
+                <td style="text-align: right;">上传图片：<br/><font color=#ff0000>或</font><br/>图片路径：</td>
+                <td>
+                    <div id="couponInfo_edit_preview">
+                        <img id="couponInfo_edit_imghead" src='/static/img/image.png' style="width: 50px;height: 50px">
+                    </div>
+                    <input id="couponInfo_edit_file" type="file" name="file" accept="image/jpeg,image/png" style="width: 190px;height: 30px;display: none;" onchange="doPreview(this,'couponInfo_edit_file','couponInfo_edit_preview','couponInfo_edit_imghead')" />
+                    <br/>
+                    <input type="button" onclick="$('#couponInfo_edit_file').click();" value="点击上传图片" style="margin-left:0px;margin-top:-5px; width: 120px;height: 30px;font-size: 16px;" />
+                    <br/>
+                    <br/>
+                    <span style="color:red">*图片大小不超过2MB</span>
+                    <br/>
+                    <span style="color:red">*缩略图片尺寸150*150</span>
+                    <input name="Picpaths" style="width: 99%;" class="easyui-validatebox" placeholder="如果不上传图上，则请输入网络图片路径" value="{{.Obj.Picpaths}}" />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">描述：</td>
+                <td colspan="3">
+                    <textarea name="Detailinfo" style="width: 99%;height: 50px;position: relative;resize:none;" class="easyui-validatebox">{{.Obj.Detailinfo}}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">推荐理由：</td>
+                <td colspan="3">
+                    <textarea name="Reason" style="width: 99%;height: 50px;position: relative;resize:none;" class="easyui-validatebox">{{.Obj.Reason}}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">备注：</td>
+                <td colspan="3">
+                    <textarea name="Remark" style="width: 99%;height: 50px;position: relative;resize:none;" class="easyui-validatebox">{{.Obj.Remark}}</textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:center;color:red;">
+                    <b>特殊值<br/>（如果——填写，则不爬取淘宝数据，<br/>不填，则默认填写数据）</b>
+                </td>
+                <td>
+                    <label>在售价：</label>
+                    <br/>
+                    <input name="Price" value="{{.Obj.Price}}" type="text" class="easyui-numberbox" data-options="min:0,precision:2"></input>  
+                    <br/>
+                    <label>券价格：</label>
+                    <br/>
+                    <input name="Couponprice" value="{{.Obj.Couponprice}}" type="text" class="easyui-numberbox" data-options="min:0,precision:2"></input>  
+                </td>
+                <td>
+                    <label>剩于券数量：</label>
+                    <br/>
+                    <input name="Couponcount" value="{{.Obj.Couponcount}}" type="text" class="easyui-numberbox" data-options="min:0"></input> 
+                    <br/> 
+                    <label>券销量：</label>
+                    <br/>
+                    <input name="Couponusedcount" value="{{.Obj.Couponusedcount}}" type="text" class="easyui-numberbox" data-options="min:0"></input>  
+                </td>
+                <td>
+                    <label>期限：</label>
+                    <br/>
+                    <input name="Daylimit" value="{{.Obj.Daylimit}}" type="text" class="easyui-numberbox" data-options="min:0"></input>  
+                    <br/>
+                    <label>商品销量：</label>
+                    <br/>
+                    <input name="Buycount" value="{{.Obj.Buycount}}" type="text" class="easyui-numberbox" data-options="min:0"></input>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+    $(function(){
+
+        $('#couponInfo_edit_from input[name=Status]').combobox({
+            method: "get",
+            panelHeight: 'auto',
+            editable: false,
+            url: '/static/json/comboboxStatusData.json',
+            valueField: 'id',
+            textField: 'text'
+        });
+
+        $('#couponInfo_edit_from input[name=categoryid]').combobox({
+            method: "get",
+            panelHeight: 'auto',
+            editable: false,
+            url: '/public/couponCategory',
+            valueField: 'Id',
+            textField: 'Name'
+        });
+        setTimeout(function(){
+            $('#couponInfo_edit_from input[name=categoryid]').combobox('setValue', {{.Obj.Categoryid.Id}});
+        }, 100)
+        $("#couponInfo_edit_imghead").attr('src', src="/{{.uploadpath}}?t=" + Math.random());
+
+    });
+    function edit() {
+        // call 'submit' method of form plugin to submit the form  
+        $.messager.progress(); // 显示进度条  
+        $('#couponInfo_edit_from').form('submit', {
+            url:'/public/couponInfo/update',
+            onSubmit: function(param) {
+                // do some check 
+                // return false to prevent submit;  
+                var isValid = $(this).form('validate');
+                if (!isValid) {
+                    $.messager.progress('close'); // 如果表单是无效的则隐藏进度条
+                    $.messager.alert('系统信息', "信息不完善，不允许操作！", "info");
+                }
+                return isValid; // 返回false终止表单提交
+
+            },
+            success: function(data) {
+                $.messager.progress('close'); // 如果提交成功则隐藏进度条
+                var data = eval('(' + data + ')'); // change the JSON string to javascript object 
+                var flag = "error"
+                if(data.success){
+                    $('#couponInfoList_datagrid').datagrid('reload');
+                    $('#couponInfo_dialog_edit').dialog("close");
+                    flag = "info"
+                }
+                $.messager.alert('系统信息', data.message, flag);
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>

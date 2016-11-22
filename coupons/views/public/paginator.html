@@ -1,0 +1,51 @@
+<link rel="stylesheet" href="/static/third/bootstrap-paginator/bootstrap-paginator.css">
+<script src="/static/third/bootstrap-paginator/bootstrap-paginator.min.js"></script>
+<script type="text/javascript">
+$(function() {
+    $("#pagination-nav").bootstrapPaginator({
+        currentPage: {{.page}},
+        totalPages: {{.totalPages}},
+        // bootstrapMajorVersion: 3,
+        size: "large",
+        numberOfPages: 10,
+        // itemTexts: function(type, page, current) {
+        //     switch (type) {
+        //         case "first":
+        //             return "第一页";
+        //         case "prev":
+        //             return "上一页";
+        //         case "next":
+        //             return "上一页";
+        //         case "last":
+        //             return "最后一页";
+        //         case "page":
+        //             return page;
+        //     }
+        // },
+        tooltipTitles: function(type, page, current) {
+            switch (type) {
+                case "first":
+                    return "第一页";
+                case "prev":
+                    return "上一页";
+                case "next":
+                    return "下一页";
+                case "last":
+                    return "最后一页";
+                case "page":
+                    return "跳转到第" + page + "页";
+            }
+        },
+        itemContainerClass: function(type, page, current) {
+            return (page === current) ? "active" : "pointer-cursor";
+        },
+        // pageUrl: function(type, page, current) {
+        //     return "http://example.com/list/page/" + page;
+        // },
+        onPageClicked: function(e, originalEvent, type, page) {
+            window.location.href = "/index/{{.tagid}}/{{.stagid}}/{{.categoryid}}/"+page+"/"
+        }
+    });
+});
+</script>
+<div id="pagination-nav"></div>

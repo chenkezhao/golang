@@ -1,0 +1,190 @@
+<style type="text/css">
+#guidangList h4 {
+    font-size: 14px;
+    color: #333;
+    margin: 0px;
+}
+
+#guidangList dl {
+    font-size: 14px;
+    padding-left: 40px;
+    padding-right: 20px;
+    margin-top: 0px;
+    padding-top: 10px;
+}
+
+#guidangList dt,
+dd {
+    cursor: pointer;
+}
+
+/*#guidangList dt:hover,dd:hover {
+    background: #FFC107;
+}*/
+</style>
+<div style="width: 100%;height: 100%;">
+    <div id="guidangList" style="width: 20%; min-height: 1500px;float: left;">
+        <!-- ul>li.item$*100>a[href="http://emmet.evget.com/#HTML" target="_blank"]{link $} -->
+        <div style="padding: 20px;/*box-shadow: 0px 0px 3px 0px #000000;*/margin-bottom: 6px;margin: 2px;">
+            <h4>归档列表</h4>
+        </div>
+        <div style="width: 200px;height: 1px;" class="line-divider-color"></div>
+        <!-- dl>((dt>u.primary-text-color{一级菜单 $})+(dd>u.primary-text-color{二级菜单 $})*5)*20 -->
+        <dl>
+            {{range .Categorys}}
+                {{if .ParentId}}
+                    <dd>
+                        <u><a  id="{{.Id}}" href="/blog/guidang/{{.Id}}/1" class="primary-text-color" style="font-size: 20px;"><b>--{{.Name}}</b></a></u>
+                        {{if $.IsAdmin}}
+                            <ul class="actionBar" style="float: right;color: rgba(0, 0, 0, 0.5);padding-top: 6px;">
+                                <li class="categoryFlag" onclick="editCategory('{{.Name}}','{{.ParentId}}','{{.Id}}')">修改</li>
+                                <li class="categoryFlag" onclick="delCategory('{{.Name}}','{{.Id}}')">删除</li>
+                            </ul>
+                        {{end}}
+                    </dd>
+                {{else}}
+                    <dt>
+                        <u><a  id="{{.Id}}" href="/blog/guidang/{{.Id}}/1" class="primary-text-color" style="font-size: 20px;"><b>{{.Name}}</b></a></u>
+                        {{if $.IsAdmin}}
+                            <ul class="actionBar" style="float: right;color: rgba(0, 0, 0, 0.5);padding-top: 6px;">
+                                <li class="categoryFlag" onclick="editCategory('{{.Name}}','{{.ParentId}}','{{.Id}}')">修改</li>
+                                <li class="categoryFlag" onclick="delCategory('{{.Name}}','{{.Id}}')">删除</li>
+                            </ul>
+                         {{end}}
+                    </dt>
+                {{end}}
+            {{end}}
+        </dl>
+    </div>
+    <div style="width: 80%; min-height: 1500px;float: left;">
+        {{range $index,$map := .AriticleMaps}}
+            <div style="padding: 16px;width: auto;">
+                <div style="width: auto;min-height: 200px;">
+                    <div class="article_title">
+                        <h1>
+                            <span><a href="/blog/article/a/{{$map.id}}">
+                                {{$map.title}}
+                            </a></span>
+                        </h1>
+                    </div>
+                    <!-- <p class="categoryFlag">{{$map.name}}</p> -->
+                        <ul class="actionBar">
+                            {{if $.IsAdmin}}
+                                <li class="categoryFlag"><a class="categoryFlag primary-text-color" href="/blog/editArticle/{{$map.id}}"><u>编辑</u></a></li>
+                                <li class="categoryFlag" onclick="delArticle('{{$map.id}}')"><u>删除</u></li>
+                            {{end}}
+                        </ul>
+                    <div><span>{{$map.time}}</span></div>
+                    <div>
+                        {{str2html $map.summary}}
+                    </div>
+                </div>
+            </div>
+            <div style="width: 100%;height: 1px;" class="line-divider-color"></div>        
+        {{end}}
+        
+        <div>
+            {{template "pagination.html"}}
+        </div>
+    </div>
+</div>
+<div id="updateCategoryDialog" style="width: 400px;
+height: 300px;
+position: fixed;
+left: 50%;
+top: 50%;
+margin-left: -200px;
+margin-top: -150px;
+box-shadow: 0px 0px 10px 0px #000;
+border-radius: 17px;
+display: none;
+background: #fff;">
+    <h1 style="text-align: center;">修改分类</h1>
+    <form action="/blog/updateCategory" method="post" style="position: relative;top: 50%;margin-top: -150px;left: 50%;margin-left: -130px;">
+            <table>
+                <tr>
+                    <td>名称：</td>
+                    <td><input id="uName" type="text" name="Name"><input id="uId" type="hidden" name="Id"></td>
+                </tr>
+                <tr>
+                    <td>上级分类：</td>
+                    <td>
+                        <select id="uParentId" name="ParentId">
+                            {{range .Categorys}}
+                                {{if eq .ParentId 0}}<option value="{{.Id}}" class="{{.ParentId}}">{{.Name}}</option>{{end}}
+                            {{end}}
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <div style="width: 100%;height: 1px;" class="line-divider-color"></div>
+                    </td>
+                </tr>
+                <tr style="height: 100px;">
+                    <td style="text-align: right;"><button type="submit">保存</button></td>
+                    <td style="text-align: left;"><input type="button" class="cancel" value="取消"></td>
+                </tr>
+            </table>
+    </form>
+</div>
+<script type="text/javascript">
+var currentNum = 1;
+
+function nextPage(type) {
+
+    var url = document.URL;
+    var num = url.substr(url.lastIndexOf("/") + 1)
+    var chekNum = /[0-9]*/;
+    if ((num = chekNum.exec(num)) != null) {
+        currentNum = num;
+    }
+    if ("next" == type) {
+        currentNum++;
+    } else {
+        if (currentNum > 1) {
+            currentNum--;
+        }
+    }
+
+    window.location = "/blog/guidang/{{.currCategory}}/" + currentNum;
+}
+
+function delCategory(name,id){
+    if(window.confirm('你确定要删除分类《'+name+'》？')){
+        //alert("确定");
+        $.post("/blog/delCategory",{ id: id} , function(data){
+          if(data=="true"){
+            location.reload();
+          }else{
+            alert(data)
+          }
+        });
+        return true;
+    }
+}
+function editCategory(name,pid,id){
+    $("#uName").val(name);
+    $("#uParentId option").attr("disabled",false)
+    $("#uParentId option[value="+id+"]").attr("disabled",true)
+    $("#uId").val(id);
+    $("#uParentId").val(pid);
+
+    //已经有子类，禁用上级分类
+    $.post("/blog/queryChildCount",{id:id},function(data){
+        $("#uParentId").removeAttr("disabled");  
+        if(data!=0){
+            $("#uParentId").attr("disabled","disabled");  
+        }
+    });
+    $('#updateCategoryDialog').fadeIn(300);
+}
+
+
+$(function(){
+    $("#{{.currCategory}}").css("color","#FFC107")
+    $(".cancel").click(function() {
+        $('#updateCategoryDialog').fadeOut(300);
+    });
+});
+</script>

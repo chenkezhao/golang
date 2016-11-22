@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>优惠券平台</title>
+    <!-- jquery -->
+    <script type="text/javascript" src="/static/third/jquery-3.1.1.min.js"></script>
+    <!-- jquery confirm 弹框 主要用于前端
+    <link rel="stylesheet" href="/static/third/jquery-confirm/jquery-confirm.min.css">
+    <script type="text/javascript" src="/static/third/jquery-confirm/jquery-confirm.min.js"></script> -->
+    <!-- jquery easyui -->
+    <link rel="stylesheet" type="text/css" href="/static/third/jquery-easyui/themes/default/easyui.css">
+    <link rel="stylesheet" type="text/css" href="/static/third/jquery-easyui/themes/icon.css">
+    <script type="text/javascript" src="/static/third/jquery-easyui/jquery.easyui.min.js"></script>
+    <script type="text/javascript" src="/static/third/jquery-easyui/locale/easyui-lang-zh_CN.js"></script>
+    <!-- zTree 树形结构菜单 -->
+    <link rel="stylesheet" href="/static/third/zTree/zTreeStyle/zTreeStyle.css" type="text/css">
+    <script type="text/javascript" src="/static/third/zTree/jquery.ztree.all.min.js"></script>
+    <script type="text/javascript" src="/static/third/zTree/jquery.ztree.exhide.min.js"></script>
+    <!-- 工具 -->
+    <script type="text/javascript" src="/static/js/utils.js"></script>
+</head>
+<style type="text/css">
+body,
+html {
+    width: 100%;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+}
+
+.main_menu {
+    color: #444;
+    position: relative;
+    float: right;
+    margin: 0 34px 0 0;
+    height: 100%;
+    line-height: 67px;
+}
+
+.main_menu>li {
+    float: left;
+    display: inline-block;
+    margin: 0 4px -1px 0;
+    padding: 0;
+    position: relative;
+    border: 0;
+    font-size: 30px;
+}
+.adminInfo {
+    float: right;
+    color: #444;
+    margin: 0 34px 0 0;
+    height: 100%;
+    line-height: 30px;
+}
+
+.adminInfo>li {
+    float: left;
+    display: inline-block;
+    margin: 0 4px -1px 0;
+    padding: 0;
+    border: 0;
+    font-size: 14px;
+}
+
+.menu_item {
+    cursor: pointer;
+}
+
+.menu_item:hover {
+    font-weight: bold;
+    color: #ff0000;
+}
+
+.table{
+    padding: 16px;
+}
+.table td {
+    padding:4px;
+}
+</style>
+
+<body>
+    <div class="easyui-layout" style="width: 100%;height: 100%;min-width: 1200px;min-height: 500px;">
+        <div region="north" style="width: 100%;height: 100px;">
+            <div style="width: 100%;height: 30px;">
+                <marquee style="float:left;width: 70%;height: 100%;line-height: 30px;border-right: 1px solid #ff0000;" direction="left" onmouseover="stop()" onmouseout="start()"><font color="#ff0000">此提示为提醒功能：</font>曾经沧海难为水，除却巫山不是云。____元稹《离思五首·其四》</marquee>
+                <ul class="adminInfo">
+                    <li>欢迎，<b><font color=#ff0000>{{.AdminInfo.Loginname}}</font></b>登录！</li>
+                    <li><a href="exit">退出</a></li>
+                </ul>
+            </div>
+            <div style="width: 100%;height: 67px;border-top: 1px solid #ff0000;">
+                <ul class="main_menu">
+                    <!-- <li class="menu_item">优惠券管理</li>
+                    <li>|</li>
+                    <li class="menu_item">优惠券管理</li>
+                    <li>|</li>
+                    <li class="menu_item">优惠券管理</li>
+                    <li>|</li>
+                    <li class="menu_item">优惠券管理</li>
+                    <li>|</li>
+                    <li class="menu_item">优惠券管理</li>
+                    <li>|</li>
+                    <li class="menu_item">系统管理</li> -->
+                </ul>
+            </div>
+        </div>
+        <div class="leftTreeMenu" region="west" split="true" title="系统管理" style="width:150px;">
+            <ul id="treeDemo" class="ztree"></ul>
+            <!-- <li><a href="#" onclick="addTab('google','http://www.baidu.com')">google</a></li> -->
+        </div>
+        <div id="content" region="center" data-options="border:true,noheader:true" title="主要内容" style="padding:0px;">
+            <div id="content_tabs" class="easyui-tabs" data-options="border:false" style="width:100%;height:100%;">
+                <div title="Home" style="padding:10px;">
+                    Home
+                </div>
+            </div>
+        </div>
+        <div region="south" style="width: 100%;height: 55px;">
+            {{template "admin/base/foot.html" .}}
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+$(function() {
+
+    //初始化菜单
+    $.get("/admin/sysRes/queryAllMenu", function(data) {
+        var mainMenu = ""
+        var treeMenu = ""
+        var zTreeObj;
+        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "Id",
+                    pIdKey: "Parent",
+                    rootPId: 0
+                },
+                key: {
+                    name: "Name"
+                }
+            },
+            callback: {
+                onClick: onClickTreeMenu
+            }
+        };
+
+        for (var m in data) {
+            if (data[m].Parent == 0) {
+                //mainMenu
+                mainMenu += JSON.stringify(data[m]) + ","
+            } else {
+                //treeMenu
+                treeMenu += JSON.stringify(data[m]) + ","
+            }
+        }
+
+        mainMenu = "[" + mainMenu.substring(0, mainMenu.lastIndexOf(",")) + "]"
+        treeMenu = "[" + treeMenu.substring(0, treeMenu.lastIndexOf(",")) + "]"
+        mainMenu = JSON.parse(mainMenu)
+        treeMenu = JSON.parse(treeMenu)
+
+        var mainMenuStr = ""
+        for (var m in mainMenu) {
+            mainMenuStr += '<li class="menu_item" id="' + mainMenu[m].Id + '">' + mainMenu[m].Name + '</li>'
+            if (m != mainMenu.length - 1) {
+                mainMenuStr += '<li>|</li>'
+            }
+        }
+        $(".main_menu").html(mainMenuStr);
+
+        $(".menu_item").click(function() {
+           $(".leftTreeMenu").panel("setTitle",$(this).text())
+            //根据一级找出二级以下的菜单，再将二级Parent设为0
+            var tempTreeMenu = "["
+            var id = $(this).attr("id")
+            for (var t in treeMenu) {
+                if (id == treeMenu[t].Parent) {
+                    tempTreeMenu += JSON.stringify(treeMenu[t]) + ","
+                    for (var m in treeMenu) {
+                        if (treeMenu[t].Id == treeMenu[m].Parent) {
+                            tempTreeMenu += JSON.stringify(treeMenu[m]) + ","
+                        }
+                    }
+                }
+            }
+            tempTreeMenu = tempTreeMenu.substring(0, tempTreeMenu.lastIndexOf(",")) + "]"
+            tempTreeMenu = JSON.parse(tempTreeMenu)
+            zTreeObj = $.fn.zTree.init($("#treeDemo"), setting, tempTreeMenu);
+        });
+
+        $($(".menu_item")[0]).click()
+    })
+
+
+
+});
+
+
+
+function onClickTreeMenu(event, treeId, treeNode, clickFlag) {
+    if (treeNode.Respath.trim() != "") {
+        addTab(treeNode.Name, treeNode.Respath)
+    }
+}
+
+function addTab(title, url) {
+    if ($('#content_tabs').tabs('exists', title)) {
+        $('#content_tabs').tabs('select', title);
+    } else {
+        url = url.replace(/\//g, "+++")
+        $('#content_tabs').tabs('add', {
+            title: title,
+            href: "/showHtml/" + url,
+            closable: true
+        });
+    }
+}
+</script>
+
+</html>

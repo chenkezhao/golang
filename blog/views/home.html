@@ -1,0 +1,95 @@
+<style type="text/css">
+#newArticle h4 {
+    font-size: 14px;
+    color: #333;
+    margin: 0px;
+}
+
+#newArticle dl {
+    font-size: 14px;
+    padding-left: 40px;
+    padding-right: 20px;
+    margin-top: 0px;
+    padding-top: 10px;
+}
+
+#newArticle dt {
+    clear: left;
+    float: left;
+}
+
+#newArticle dd {
+    text-align: right;
+    font-size: 12px;
+    padding: 4px 0;
+}
+</style>
+<div style="width: 100%;height: 100%;">
+    <div id="newArticle" style="width: 20%; min-height: 1500px;float: left;">
+        <!-- ul>li.item$*100>a[href="http://emmet.evget.com/#HTML" target="_blank"]{link $} -->
+        <div style="padding: 20px;/*box-shadow: 0px 0px 3px 0px #000000;*/margin-bottom: 6px;margin: 2px;">
+            <h4>最新文章列表摘要</h4>
+        </div>
+        <div style="width: 200px;height: 1px;" class="line-divider-color"></div>
+        <!-- dl>((dt>a[href="http://emmet.evget.com/#HTML" target="_blank" title="chenkezhao"].primary-text-color{文章 $})+dd{文章发布时间:2016-10-19})*20 -->
+        <dl>
+            {{range .Articles}}
+                <dt><a href="/blog/article/a/{{.Id}}" title="chenkezhao" class="primary-text-color" ><b>{{.Title}}</b></a></dt>
+                <dd class="secondary-text-color" >文章发布时间:{{dateformat .Time "2006-01-02"}}</dd>
+            {{end}}
+        </dl>
+    </div>
+    <div style="width: 80%; min-height: 1500px;float: left;">
+        {{range $index,$map := .AriticleMaps}}
+            <div style="padding: 16px;width: auto;">
+                <div style="width: auto;min-height: 200px;">
+                    <div class="article_title">
+                        <h1>
+                            <span><a href="/blog/article/a/{{$map.id}}">
+                                {{$map.title}}
+                            </a></span>
+                        </h1>
+                    </div>
+                        <ul class="actionBar">
+                            <li><a  class="categoryFlag primary-text-color" href="/blog/guidang/{{$map.category_id}}/1" style="text-decoration:none">{{$map.name}}</a></li>
+                            {{if $.IsAdmin}}
+                                <li class="categoryFlag"><a class="categoryFlag primary-text-color" href="/blog/editArticle/{{$map.id}}"><u>编辑</u></a></li>
+                                <li class="categoryFlag" onclick="delArticle('{{$map.id}}')"><u>删除</u></li>
+                            {{end}}
+                        </ul>
+                    <div><span>{{$map.time}}</span></div>
+                    <div>
+                        {{str2html $map.summary}}
+                    </div>
+                </div>
+            </div>
+            <div style="width: 100%;height: 1px;" class="line-divider-color"></div>        
+        {{end}}
+        <div>
+            {{template "pagination.html"}}
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+var currentNum = 1;
+
+function nextPage(type) {
+
+    var url = document.URL;
+    var num = url.substr(url.lastIndexOf("/") + 1)
+    var chekNum = /[0-9]*/;
+    if ((num = chekNum.exec(num)) != null) {
+        currentNum = num;
+    }
+    if ("next" == type) {
+        currentNum++;
+    } else {
+        if (currentNum > 1) {
+            currentNum--;
+        }
+    }
+
+    window.location = "/blog/index/" + currentNum;
+}
+</script>

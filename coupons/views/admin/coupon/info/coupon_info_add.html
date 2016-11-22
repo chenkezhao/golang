@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>新增优惠券信息</title>
+</head>
+
+<body>
+    <form id="couponInfo_add_from" method="post"  enctype="multipart/form-data">
+        <table border=1 bordercolor=#dbe1eb style="border-collapse:collapse;width: 100%;height: auto;" class="table">
+            <tr style="height: 40px;">
+                <th style="text-align: center;">所属标签<span style="margin-left:16px;cursor: pointer;color:#ff0000;" onClick="zTreeObjByCouponInfoAdd.checkAllNodes(false);">X</span></th>
+                <th style="text-align: center;" colspan="4">优惠券信息</th>
+            </tr>
+            <tr>
+                <td rowspan="8" height="40px">
+                    <!-- 只加载一、二级菜单 -->
+                    <ul id="tagTreeMenuAddByCouponInfo" style="width: 100%;height: 100%;" class="ztree" />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">标题：</td>
+                <td>
+                    <input name="Title" class="easyui-validatebox" data-options="required:true" />
+                </td>
+                <td style="text-align: right;">子标题：</td>
+                <td>
+                    <input name="Subtitle" class="easyui-validatebox" />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">优惠券链接：</td>
+                <td>
+                    <input name="Couponslink" class="easyui-validatebox" data-options="required:true" />
+                </td>
+                <td style="text-align: right;">下单链接：</td>
+                <td>
+                    <input name="Buylink" class="easyui-validatebox"  data-options="required:true" />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">排序号：</td>
+                <td>
+                    <input name="Seqno" class="easyui-numberbox" />
+                </td>
+                <td style="text-align: right;">状态：</td>
+                <td>
+                    <input name="Status" data-options="required:true" value="0">
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">分类：</td>
+                <td>
+                    <input name="categoryid" data-options="required:true">
+                </td>
+                <td style="text-align: right;">上传图片：<br/><font color=#ff0000>或</font><br/>图片路径：</td>
+                <td>
+                    <div id="c_piclunggun_add_preview">
+                        <img id="c_piclunggun_add_imghead" src='/static/img/image.png' style="width: 50px;height: 50px">
+                    </div>
+                    <input id="c_piclunggun_add_file" type="file" name="file" accept="image/jpeg,image/png" style="width: 190px;height: 30px;display: none;" onchange="doPreview(this,'c_piclunggun_add_file','c_piclunggun_add_preview','c_piclunggun_add_imghead')" />
+                    <br/>
+                    <input type="button" onclick="$('#c_piclunggun_add_file').click();" value="点击上传图片" style="margin-left:0px;margin-top:-5px; width: 120px;height: 30px;font-size: 16px;" />
+                    <br/>
+                    <br/>
+                    <span style="color:red">*图片大小不超过2MB</span>
+                    <br/>
+                    <span style="color:red">*缩略图片尺寸150*150</span>
+                    <input name="Picpaths" style="width: 99%;" class="easyui-validatebox" placeholder="如果不上传图上，则请输入网络图片路径"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">描述：</td>
+                <td colspan="3">
+                    <textarea name="Detailinfo" style="width: 99%;height: 50px;position: relative;resize:none;" class="easyui-validatebox"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">推荐理由：</td>
+                <td colspan="3">
+                    <textarea name="Reason" style="width: 99%;height: 50px;position: relative;resize:none;" class="easyui-validatebox"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">备注：</td>
+                <td colspan="3">
+                    <textarea name="Remark" style="width: 99%;height: 50px;position: relative;resize:none;" class="easyui-validatebox"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align:center;color:red;" colspan="2">
+                    <b>特殊值<br/>（如果——填写，则不爬取淘宝数据，<br/>不填，则默认填写数据）</b>
+                </td>
+                <td>
+                    <label>在售价：</label>
+                    <br/>
+                    <input name="Price" type="text" class="easyui-numberbox" data-options="min:0,precision:2"></input>  
+                    <br/>
+                    <label>券价格：</label>
+                    <br/>
+                    <input name="Couponprice" type="text" class="easyui-numberbox" data-options="min:0,precision:2"></input>  
+                </td>
+                <td>
+                    <label>剩于券数量：</label>
+                    <br/>
+                    <input name="Couponcount" type="text" class="easyui-numberbox" data-options="min:0"></input>  
+                    <br/>
+                    <label>券销量：</label>
+                    <br/>
+                    <input name="Couponusedcount" type="text" class="easyui-numberbox" data-options="min:0"></input>  
+                </td>
+                <td>
+                    <label>期限：</label>
+                    <br/>
+                    <input name="Daylimit" type="text" class="easyui-numberbox" data-options="min:0"></input>  
+                    <br/>
+                    <label>商品销量：</label>
+                    <br/>
+                    <input name="Buycount" type="text" class="easyui-numberbox" data-options="min:0"></input>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+    var zTreeObjByCouponInfoAdd
+    $(function() {
+        $('#couponInfo_add_from input[name=Status]').combobox({
+            method: "get",
+            panelHeight: 'auto',
+            editable: false,
+            url: '/static/json/comboboxStatusData.json',
+            valueField: 'id',
+            textField: 'text'
+        });
+        $('#couponInfo_add_from input[name=categoryid]').combobox({
+            method: "get",
+            panelHeight: 'auto',
+            editable: false,
+            url: '/public/couponCategory',
+            valueField: 'Id',
+            textField: 'Name'
+        });
+
+
+        var SettingByCouponInfoAdd = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "Id",
+                    pIdKey: "Parent",
+                    rootPId: 0
+                },
+                key: {
+                    name: "Name"
+                }
+            },
+            check:{
+                enable: true,
+                chkStyle: "checkbox",
+                chkboxType : {"Y": "ps", "N": "ps"}
+            }
+        };
+        //初始化菜单
+        $.get("/public/couponTag", function(data) {
+            zTreeObjByCouponInfoAdd = $.fn.zTree.init($("#tagTreeMenuAddByCouponInfo"), SettingByCouponInfoAdd, data);
+
+        });    
+    });
+
+    function add() {
+        // call 'submit' method of form plugin to submit the form  
+        $.messager.progress(); // 显示进度条  
+        $('#couponInfo_add_from').form('submit', {
+            url: '/public/couponInfo',
+            onSubmit: function(param) {
+                var tagids = new Array();
+                var tagNames = new Array();
+                var nodes =zTreeObjByCouponInfoAdd.getCheckedNodes(true);
+                for (var i in nodes){
+                    tagids[i]=nodes[i].Id
+                    tagNames[i]=nodes[i].Name
+                }
+                param["tagids"]  = tagids
+                param["tagNames"]  = tagNames
+                // do some check 
+                // return false to prevent submit;  
+                var isValid = $(this).form('validate');
+                if (!isValid) {
+                    $.messager.progress('close'); // 如果表单是无效的则隐藏进度条
+                    $.messager.alert('系统信息', "信息不完善，不允许操作！", "info");
+                }
+                return isValid; // 返回false终止表单提交
+
+            },
+            success: function(data) {
+                $.messager.progress('close'); // 如果提交成功则隐藏进度条
+                var data = eval('(' + data + ')'); // change the JSON string to javascript object 
+                var flag = "error"
+                if (data.success) {
+                    $('#couponInfoList_datagrid').datagrid('reload');
+                    $('#couponInfo_dialog_add').dialog("close");
+                    flag = "info"
+                }
+                $.messager.alert('系统信息', data.message, flag);
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>

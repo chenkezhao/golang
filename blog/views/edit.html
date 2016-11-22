@@ -1,0 +1,154 @@
+<style type="text/css">
+.edui-default .edui-editor {
+    border: 1px solid #d4d4d4;
+    background-color: white;
+    position: relative;
+    overflow: visible;
+    -webkit-border-radius: 0px;
+    -moz-border-radius: 0px;
+    border-radius: 0px;
+}
+
+#content>.edui-default .edui-editor {
+    border: 1px solid #d4d4d4;
+    background-color: white;
+    position: relative;
+    overflow: visible;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+.clear {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: 1px 0px 0 -14px;
+    cursor: pointer;
+}
+
+.clear:hover {
+    color: #FFC107;
+    font-weight：bold;
+}
+</style>
+<div style="margin: 24px;padding: 16px;border: 1px solid rgb(212, 212, 212);">
+    <!-- 把容器放到form表单里面，设置好要提交的路径，如下面代码中的<form>标签 -->
+    <form action="/blog/addArticle" method="post" onsubmit="return validateForm()">
+        <p>标题：
+            <input type="hidden" name="id" value="{{if .Article}}{{.Article.Id}}{{end}}">
+            <input name="title" type="text" style="border-style: none;border-bottom: 1px solid #BDBDBD;width: 70%;font-size: 40px;outline:none;" value="{{.Article.Title}}">
+        </p>
+        <p>分类：
+            <select name="categoryId">
+                {{range .Categorys}}
+                    <option value="{{.Id}}" class="{{.ParentId}}">
+                        {{if .ParentId}}-->{{end}}{{.Name}}
+                    </option>
+                {{end}}
+                <option value="" class="0">其它</option>
+            </select>
+            <input name="categoryAdded" id="categoryAdded" type="text" placeholder="找不到，选择其它，在这里输入..." style="width: 250px;"><a class="clear" onclick="$('#categoryAdded').val('')">x</a>
+        </p>
+        <p style="margin: 1px;">摘要：</p>
+        <script id="summaryContainer" name="summary" type="text/plain" style="width:100%;height:100px;border: none;"></script>
+        <p style="margin: 1px;">内容：</p>
+        <div id="content">
+            <!-- 加载编辑器的容器 -->
+            <script id="contentContainer" name="content" type="text/plain" style="width:100%;height:1000px;border: none;"></script>
+        </div>
+        <div style="width: 100%;text-align: center;">
+            {{if .Article}}
+                <button type="submit" style="margin:24px 0;">保存更改</button>
+            {{else}}
+                <button type="submit" style="margin:24px 0;">提交</button>
+            {{end}}
+        </div>
+    </form>
+    <!-- 配置文件 -->
+    <script type="text/javascript" src="/static/ueditor1_4_3_3-utf8-jsp/ueditor.config.js"></script>
+    <!-- 编辑器源码文件 -->
+    <script type="text/javascript" src="/static/ueditor1_4_3_3-utf8-jsp/ueditor.all.js"></script>
+    <!-- 实例化  《内容》  编辑器 -->
+    <script type="text/javascript">
+    var ueContent = UE.getEditor('contentContainer', {
+        autoHeight: true,
+        // initialFrameWidth:100
+    });
+    var ueSummary = UE.getEditor('summaryContainer', {
+        autoHeight: false,
+        toolbars: [],
+        enableAutoSave: false,
+        elementPathEnabled: false,
+        maximumWords: 300,
+    });
+    ueContent.ready( function( editor ) {
+        {{if .Article}}
+            ueContent.setContent({{str2html .Article.Content}})
+        {{end}}
+    } );
+    ueSummary.ready( function( editor ) {
+        {{if .Article}}
+            ueSummary.setContent({{str2html .Article.Summary}})
+        {{end}}
+    } );
+
+
+    function validateForm() {
+        var cSummary = ueSummary.getContentTxt().trim();
+        if(cSummary==""){
+            cSummary = ueContent.getContentTxt().trim();
+            var len = cSummary.length;
+            if(len>=250){
+                len = 250;
+            }
+            cSummary = cSummary.substring(0,len);
+            ueSummary.setContent(cSummary)
+        }
+        var cContent = encodeURIComponent(ueContent.getContent());
+        var title = $("input[name=title]").val().trim();
+        var category = $("select[name=categoryId]").val().trim();
+        var cAdded = $("#categoryAdded").val().trim();
+        if (title == "") {
+            alert("没有标题，我不认识你！")
+            return false
+        }
+        if (category == "") {
+            if (cAdded == "") {
+                alert("文章分类不应该为空")
+                return false
+            }
+        }
+        if (cContent == "") {
+            alert("太懒了，都没点东西，还敢发.")
+            return false
+        }
+        if (cContent != "") {
+            var len = cContent.length
+            if (len < 50) {
+                alert("内容太少了，没诚意！")
+                return false
+            }
+        }
+        if (msg != "") {
+            alert(msg);
+            return false;
+        }
+        return true;
+    }
+
+    $(function(){
+        $("select[name=categoryId]").change(function(){
+            optCls = $(this).children('option:selected').attr("class");
+            if (optCls!="0"){
+                $("#categoryAdded").attr({"disabled":true,"placeholder":"只限两级菜单分类"});
+            }else{
+                $("#categoryAdded").attr({"disabled":false,"placeholder":"找不到，选择其它，在这里输入..."});
+            }
+        });
+        $("select[name=categoryId]").val("{{.Category.Id}}");
+
+
+    });
+    </script>
+</div>

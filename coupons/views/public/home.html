@@ -1,0 +1,106 @@
+<!-- header -->
+    <div style="width:1200px;margin:0 auto;min-height: 300px;">
+        <div class="navCategoryMenu divider-color" style="height:100%;width: 200px;float:left;border-top: none;background: #fff;min-height: 370px;">
+            <ul>
+                {{range $i,$c :=.Category}}
+                    <li><a href="javascript:void(0)">{{$c.Name}}</a></li> 
+                {{end}}
+            </ul>
+        </div>
+        <div style="height:300px;width: 697px;float:left;margin: 16px;background:#fff;">
+            <div style="position: relative;width: 100%;height: 100%;">
+                <div class="productRoll">
+                    {{range $i,$p :=.Piclungun}}
+                        <img src="{{$p.Picpath}}" data-caption="#htmlCaption{{$i}}" />
+                        <span class="orbit-caption" id="htmlCaption{{$i}}">{{$p.Title}}</span>
+                    {{end}}
+                </div>
+            </div>
+        </div>
+        <div style="height:300px;width: 263px;float:left;margin-top:16px;background: #fff;" class="divider-color">
+            <div style="position:relative;width: 100%;height:200px;float:left;background: url(http://cms3.qingtaoke.com/images/right-pic.png?v=21) no-repeat center center;" class="divider-color-bottom">
+                <div class="shareBar">
+                    <!-- 百度分享插件 BEGIN -->
+                   <div class="bdsharebuttonbox">
+                      <a href="#" class="bds_more" data-cmd="more"></a>
+                      <a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+                      <a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+                      <a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+                  </div>
+                  <script>
+                  window._bd_share_config = {
+                      "common": {
+                          "bdSnsKey": {},
+                          "bdText": "",
+                          "bdMini": "2",
+                          "bdMiniList": false,
+                          "bdPic": "",
+                          "bdStyle": "0",
+                          "bdSize": "24"
+                      },
+                      "share": {},
+                      "selectShare": {
+                          "bdContainerClass": null,
+                          "bdSelectMiniList": ["qzone", "weixin", "tsina"]
+                      }
+                  };
+                  with(document) 0[(getElementsByTagName('head')[0] || body).appendChild(createElement('script')).src = 'http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion=' + ~(-new Date() / 36e5)];
+                  </script>
+
+                    <!-- 百度分享插件 END -->
+                </div>
+            </div>
+            <div style="width: 100%;height:100px;float:left;">
+                <div style="height: 100%;width:150px;position:relative;float:left;" class="divider-color-right"></div>
+                <div style="height: 100%;width:112px;position:relative;float:left;">人气图片</div>
+            </div>
+        </div>
+        <div style="clear:both;">
+            <!-- 设置自动高度，自动加长。如果设置了浮动，在未尾使用clear:both;即可，如些代码 -->
+        </div>
+    </div>
+    <!-- content list -->
+    <div id="content">
+        {{range $index,$rts :=.RefTags}}
+            {{range $i,$rt :=$rts}}
+                {{if eq $i 0}}
+                    <div class="content-title accent-color-border-left divider-color-bottom">
+                        <div style="float:left;" class="primary-text-color">
+                            <a class="primary-text-color" href="/index.php?r=l&amp;u=2063"><h1>{{$rt.Tagname}}</h1></a>
+                            <span style="padding-left:20px;">{{$rt.Tagid.Detailinfo}}</span>
+                        </div>
+                        <div style="float:right;font-size:12px;">
+                            <a href="/index/{{$rt.Tagid.Id}}/{{$.stagid}}/0/1/"><h4>更多热卖&gt;&gt;</h4></a>
+                        </div>
+                    </div>
+                {{end}}
+                <!-- 商品块......................start-->
+                <div class="goods-block divider-color">
+                    <a target="_blank" href="javascript:void(0)">
+                        <img src="{{$rt.Couponid.Picpaths}}">
+                        <span class="mask"></span>
+                    </a>
+                    <div style="width: 100%;height: 40px;">
+                        <a href="javascript:void(0)" class="title divider-dashed-color-bottom primary-text-color" title="{{$rt.Couponid.Title}}">
+                            <i class="taobao"></i>
+                            <span>{{$rt.Couponid.Title}}</span>
+                        </a>
+                    </div>
+                    <div style="width: 100%;height: 44px;">
+                        <p class="price">
+                            <span class="buy-price">下单价：<b class="accent-color-text"><i>¥</i>{{subtraction $rt.Couponid.Price $rt.Couponid.Couponprice}}</b></span>
+                            <span class="online-price" class="primary-text-color">在售价：¥{{$rt.Couponid.Price}}</span>
+                        </p>
+                    </div>
+                    <div class="option-btn">
+                        <a href="{{$rt.Couponid.Buylink}}" target="_blank" class="buy-btn">点我下单</a>
+                        <a href="{{$rt.Couponid.Couponslink}}" target="_blank" class="quan-btn">点我领券</a>
+                    </div>
+                </div>
+                <!-- 商品块......................end-->
+            {{end}}
+            <div style="clear:both;">
+                <!-- 设置自动高度，自动加长。如果设置了浮动，在未尾使用clear:both;即可，如些代码 -->
+            </div>
+        {{end}}
+    </div>

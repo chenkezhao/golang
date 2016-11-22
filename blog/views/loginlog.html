@@ -1,0 +1,31 @@
+<table style="width: 100%;padding: 24px;" border="1px">
+	<tr>
+		<td colspan="5" style="text-align: right;"><a href="/blog/clearLoginLog" onclick="return clearWarning()" style="color: red;">清空记录</a></td>
+	</tr>
+	<tr>
+		<th>序号</th>
+		<th>登录名</th>
+		<th>IP</th>
+		<th>详细地址</th>
+		<th>登录时间</th>
+	</tr>
+	{{range $index, $log := .LoginLogs}}
+        <tr>
+			<td>{{$index}}</td>
+			<td>{{$log.LoginName}}</td>
+			<td>{{$log.Ip}}</td>
+			<td>{{$log.Address}}</td>
+			<td>{{dateformat $log.Time "2006-01-02 15:04:05"}}</td>
+        </tr>
+    {{end}}
+</table>
+
+<script type="text/javascript">
+	function clearWarning () {
+		// body... 
+		if (window.confirm("执行清空操作，将会删除所有记录数据行！你确定清空？")){
+			return true
+		}
+		return false
+	}
+</script>

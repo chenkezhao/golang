@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>修改系统资源</title>
+</head>
+
+<body>
+    <form id="sysRes_edit_from" method="post">
+        <table border=1 bordercolor=#dbe1eb style="border-collapse:collapse;width: 100%;height: auto;" class="table">
+            <tr style="height: 40px;">
+                <th style="text-align: center;">上级资源<span style="margin-left:16px;cursor: pointer;color:#ff0000;" onClick="zTreeObjBySysResEdit.cancelSelectedNode();$('input[name=Parent]').val('0')">X</span></th>
+                <th style="text-align: center;" colspan="4">系统资源信息</th>
+            </tr>
+            <tr>
+                <td rowspan="4" height="40px">
+                    <!-- 只加载一、二级菜单 -->
+                    <input type="hidden" name="Parent" value="{{.SysRes.Parent}}">
+                    <ul id="parentTreeMenuEditBySysRes" style="width: 100%;height: 100%;" class="ztree" />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">资源名称：</td>
+                <td>
+                    <input type="hidden" name="Id" value="{{.SysRes.Id}}">
+                    <input name="Name" class="easyui-validatebox" data-options="required:true" value="{{.SysRes.Name}}" />
+                </td>
+                <td style="text-align: right;">排序号：</td>
+                <td>
+                    <input name="Seqno" class="easyui-numberbox" value="{{.SysRes.Seqno}}" />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">资源路径：</td>
+                <td colspan="3">
+                    <input name="Respath" style="width: 99%;" class="easyui-validatebox" value="{{.SysRes.Respath}}" />
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">备注：</td>
+                <td colspan="3">
+                    <textarea name="Remark" style="width: 99%;height: 100px;position: relative;resize:none;" class="easyui-validatebox">{{.SysRes.Remark}}</textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+    $(function() {
+        var SettingBySysResEdit = {
+            data: {
+                simpleData: {
+                    enable: true,
+                    idKey: "Id",
+                    pIdKey: "Parent",
+                    rootPId: 0
+                },
+                key: {
+                    name: "Name"
+                }
+            },
+            callback: {
+                onClick: zTreeOnClickEdit
+            }
+        };
+        //初始化菜单
+        $.get("sysRes/queryNotThreeMenu", function(data) {
+            zTreeObjBySysResEdit = $.fn.zTree.init($("#parentTreeMenuEditBySysRes"), SettingBySysResEdit, data);
+            //选中当前父类节点
+            var node = zTreeObjBySysResEdit.getNodeByParam("Id", {{.SysRes.Parent}}, null);
+            if (node) {
+                zTreeObjBySysResEdit.selectNode(node);
+            }
+
+        });
+    });
+
+    function zTreeOnClickEdit(event, treeId, treeNode) {
+        $("#sysRes_edit_from input[name=Parent]").val(treeNode.Id)
+    }
+
+    function edit() {
+        // call 'submit' method of form plugin to submit the form  
+        $.messager.progress(); // 显示进度条  
+        $('#sysRes_edit_from').form('submit', {
+            url:'sysRes/update',
+            onSubmit: function(param) {
+                // do some check 
+                // return false to prevent submit;  
+                var isValid = $(this).form('validate');
+                if (!isValid) {
+                    $.messager.progress('close'); // 如果表单是无效的则隐藏进度条
+                    $.messager.alert('系统信息', "信息不完善，不允许操作！", "info");
+                }
+                return isValid; // 返回false终止表单提交
+
+            },
+            success: function(data) {
+                $.messager.progress('close'); // 如果提交成功则隐藏进度条
+                var data = eval('(' + data + ')'); // change the JSON string to javascript object 
+                var flag = "error"
+                if(data.success){
+                    $('#sysResList_treegrid').treegrid('reload');
+                    $('#sysRes_dialog_edit').dialog("close");
+                    flag = "info"
+                } 
+                $.messager.alert('系统信息', data.message, flag);
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>

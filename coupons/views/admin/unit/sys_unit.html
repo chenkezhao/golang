@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <div border="false" style="width: 100%;height: 100%;">
+        <div id="sysUnitList_tb" style="display:none;">
+            <div style="margin-bottom:5px">
+                <a href="javascript:void(0)" onclick="addPanelUnit()" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
+                <a href="javascript:void(0)" onclick="editPanelUnit()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
+                <a href="javascript:void(0)" onclick="detailPanelUnit()" class="easyui-linkbutton" iconCls="icon-search" plain="true">明细</a>
+                <a href="javascript:void(0)" onclick="delUnit()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+            </div>
+            <div>
+                <label>创建日期:</label>
+                <input class="easyui-datebox" editable="false" name="sDate" style="width:90px"> To:
+                <input class="easyui-datebox" editable="false" name="eDate" style="width:90px">
+                <label>根节点资源名称：</label>
+                <input class="easyui-validatebox" name="name"/>
+                <a href="javascript:void(0)" onclick="sysUnitSearch()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+                <a href="javascript:void(0)" onclick="sysUnitSearchReset()" class="easyui-linkbutton" iconCls="icon-reload">重置</a>
+            </div>
+        </div>
+        <table id="sysUnitList_treegrid">
+            <thead>
+                <tr>
+                    <th field="Id" hidden="true" width="110">id</th>
+                    <th field="Name" width="110">机构名称</th>
+                    <th field="Parent" hidden="true" width="110">上级资源</th>
+                    <th field="Call" width="110">联系人</th>
+                    <th field="Email" width="110">电子邮件</th>
+                    <th field="Creatername" width="110">创建人</th>
+                    <th field="Createrdate" width="110">创建时间</th>
+                    <th field="Changename" width="110">修改人</th>
+                    <th field="Changedate" width="110">修改时间</th>
+                    <th field="Remark" width="110">备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="sysUnit_dialog_add" style="padding: 16px;display: none;" />
+    <div id="sysUnit_dialog_edit"  style="padding: 16px;display: none;" />
+    <div id="sysUnit_dialog_detail"  style="padding: 16px;display: none;"/>
+    <script>
+    $(function() {
+        var zTreeObjBySysUnitAdd,zTreeObjBySysUnitEdit
+        $('#sysUnitList_treegrid').treegrid({
+            url: "/admin/sysUnit/list",
+            fit: true,
+            striped:true,
+            fitColumns: true,
+            rownumbers: true,
+            singleSelect: true,
+            pagination: true,
+            pageSize: 100,
+            pageList: [100, 200, 300],
+            title: "机构管理列表",
+            toolbar: '#sysUnitList_tb',
+            idField: 'Id',
+            treeField: 'Name',
+            animate: true,
+            onBeforeLoad: function(row, param) {
+                if (!row) { // load top level rows
+                    param.id = 0; // set id=0, indicate to load new page rows
+                }
+            },
+            onClickRow: function(row){
+                $(this).treegrid('expand', row.Id);
+            }
+
+        });
+    });
+
+
+    //查询
+    function sysUnitSearch() {
+        $('#sysUnitList_treegrid').treegrid("clearSelections");
+        var queryParams = $('#sysUnitList_treegrid').treegrid('options').queryParams;
+        $('#sysUnitList_tb').find(':input[name]').each(function() {
+            queryParams[$(this).attr('name')] = $(this).val();
+        });
+        $('#sysUnitList_treegrid').treegrid('reload');
+    }
+
+    //重置查询条件
+    function sysUnitSearchReset() {
+        $("#sysUnitList_tb").find(":input").val("");
+        sysUnitSearch();
+    }
+    function addPanelUnit() {
+        $('#sysUnit_dialog_edit').dialog({
+                title: '新增机构管理',
+                width: 800,
+                closed: false,
+                cache: false,
+                href: 'sysUnit/addFrom/',
+                iconCls: 'icon-add',
+                resizable: true,
+                modal: true,
+                buttons: [{
+                    text: '保存',
+                    handler: function() {
+                        addUnit()
+                        return false;
+                    }
+                }, {
+                    text: '取消',
+                    handler: function() {
+                        $('#sysUnit_dialog_edit').dialog("close");
+                    }
+                }]
+            });
+    }
+
+    function editPanelUnit() {
+        var curRow = $('#sysUnitList_treegrid').treegrid('getSelected');
+        if (curRow) {
+            $('#sysUnit_dialog_edit').dialog({
+                title: '修改机构管理',
+                width: 800,
+                closed: false,
+                cache: false,
+                href: 'sysUnit/editFrom/' + curRow.Id,
+                iconCls: 'icon-edit',
+                resizable: true,
+                modal: true,
+                buttons: [{
+                    text: '保存',
+                    handler: function() {
+                        editUnit()
+                        return false;
+                    }
+                }, {
+                    text: '取消',
+                    handler: function() {
+                        $('#sysUnit_dialog_edit').dialog("close");
+                    }
+                }]
+            });
+        } else {
+            $.messager.alert('机构信息', '请选择一条数据', 'info');
+        }
+    }
+
+    function detailPanelUnit() {
+        var curRow = $('#sysUnitList_treegrid').treegrid('getSelected');
+        if (curRow) {
+            $('#sysUnit_dialog_detail').dialog({
+                title: '机构管理明细',
+                width: 800,
+                closed: false,
+                cache: false,
+                href: 'sysUnit/detailFrom/' + curRow.Id,
+                iconCls: 'icon-search',
+                resizable: true,
+                modal: true,
+                buttons: [{
+                    text: '关闭',
+                    handler: function() {
+                        $('#sysUnit_dialog_detail').dialog("close");
+                    }
+                }]
+            });
+        } else {
+            $.messager.alert('机构信息', '请选择一条数据', 'info');
+        }
+    }
+
+    function delUnit() {
+        var curRow = $('#sysUnitList_treegrid').treegrid('getSelected');
+        if (curRow) {
+            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){    
+                if (r){    
+                    $.messager.progress(); // 显示进度条  
+                    $.get("sysUnit/del/"+curRow.Id, function(data) {
+                        $.messager.progress('close'); // 如果提交成功则隐藏进度条
+                        var flag = "error"
+                        if(data.success){
+                            $('#sysUnitList_treegrid').treegrid('reload');
+                            flag = "info"
+                        } 
+                        $.messager.alert('机构信息', data.message, flag);
+                    });  
+                }    
+            }); 
+        } else {
+            $.messager.alert('机构信息', '请选择一条数据', 'info');
+        }
+    }
+    </script>
+</body>
+
+</html>

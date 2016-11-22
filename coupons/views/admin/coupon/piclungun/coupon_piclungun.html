@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+
+<body>
+    <div border="false" style="width: 100%;height: 100%;">
+        <div id="couponPiclungunList_tb" style="display:none;">
+            <div style="margin-bottom:5px">
+                <a href="javascript:void(0)" onclick="addCouponPiclungunPanel()" class="easyui-linkbutton" iconCls="icon-add" plain="true">新增</a>
+                <a href="javascript:void(0)" onclick="editCouponPiclungunPanel()" class="easyui-linkbutton" iconCls="icon-edit" plain="true">修改</a>
+                <a href="javascript:void(0)" onclick="detailCouponPiclungunPanel()" class="easyui-linkbutton" iconCls="icon-search" plain="true">明细</a>
+                <a href="javascript:void(0)" onclick="delSelCouponPiclungun()" class="easyui-linkbutton" iconCls="icon-remove" plain="true">删除</a>
+            </div>
+            <div>
+                <label>图片名称：</label>
+                <input class="easyui-validatebox" name="name"/>
+                <a href="javascript:void(0)" onclick="couponPiclungunSearch()" class="easyui-linkbutton" iconCls="icon-search">查询</a>
+                <a href="javascript:void(0)" onclick="couponPiclungunSearchReset()" class="easyui-linkbutton" iconCls="icon-reload">重置</a>
+            </div>
+        </div>
+        <table id="couponPiclungunList_datagrid">
+            <thead>
+                <tr>
+                    <th field="Id" hidden="true" width="110">id</th>
+                    <th field="Ishome" width="110"  formatter="formatterIshome">设置为首页</th>
+                    <th field="Tagsid" width="110"  formatter="formatterTag">所属一级标签</th>
+                    <th field="Name" width="110">图片名称</th>
+                    <th field="Title" hidden="true" width="110">图片标题</th>
+                    <th field="Seqno" width="110">排序号</th>
+                    <th field="Status" width="110" formatter="formatterStatus" styler = "cssStatus">状态</th>
+                    <th field="Picpath" width="110">图片路径</th> 
+                    <th field="Detailinfo" width="110">描述信息</th>
+                    <th field="Remark" width="110">备注</th>
+                </tr>
+            </thead>
+        </table>
+    </div>
+    <div id="couponPiclungun_dialog_add" style="padding: 16px;display: none;" />
+    <div id="couponPiclungun_dialog_edit"  style="padding: 16px;display: none;" />
+    <div id="couponPiclungun_dialog_detail"  style="padding: 16px;display: none;"/>
+    <script>
+    $(function() {
+        var zTreeObjByCouponPiclungunAdd,zTreeObjByCouponPiclungunEdit
+        $('#couponPiclungunList_datagrid').datagrid({
+            url: "/public/couponPiclungun/list",
+            fit: true,
+            striped:true,
+            fitColumns: true,
+            rownumbers: true,
+            singleSelect: true,
+            pagination: true,
+            pageSize: 100,
+            pageList: [100, 200, 300],
+            title: "轮滚图片列表",
+            toolbar: '#couponPiclungunList_tb'
+
+        });
+    });
+
+    function formatterIshome(value,row,index){
+        if (value==0){
+            return "是";
+        } else {
+            return "否";
+        }
+
+    }
+    function formatterStatus(value,row,index){
+        if (value==0){
+            return "上架";
+        } else {
+            return "下架";
+        }
+
+    }
+    function formatterTag(value,row,index){
+        return value.Name
+
+    }
+    function cssStatus(value,row,index){
+        if (value==1){
+            return 'color:red;';
+        }
+
+    }
+    //查询
+    function couponPiclungunSearch() {
+        $('#couponPiclungunList_datagrid').datagrid("clearSelections");
+        var queryParams = $('#couponPiclungunList_datagrid').datagrid('options').queryParams;
+        $('#couponPiclungunList_tb').find(':input[name]').each(function() {
+            queryParams[$(this).attr('name')] = $(this).val();
+        });
+        $('#couponPiclungunList_datagrid').datagrid('reload');
+    }
+
+    //重置查询条件
+    function couponPiclungunSearchReset() {
+        $("#couponPiclungunList_tb").find(":input").val("");
+        couponPiclungunSearch();
+    }
+    function addCouponPiclungunPanel() {
+        $('#couponPiclungun_dialog_add').dialog({
+                title: '新增轮滚图片',
+                width: 800,
+                closed: false,
+                cache: false,
+                href: '/public/couponPiclungun/addFrom/',
+                iconCls: 'icon-add',
+                resizable: true,
+                modal: true,
+                buttons: [{
+                    text: '保存',
+                    handler: function() {
+                        add()
+                        return false;
+                    }
+                }, {
+                    text: '取消',
+                    handler: function() {
+                        $('#couponPiclungun_dialog_add').dialog("close");
+                    }
+                }]
+            });
+    }
+
+    function editCouponPiclungunPanel() {
+        var curRow = $('#couponPiclungunList_datagrid').datagrid('getSelected');
+        if (curRow) {
+            $('#couponPiclungun_dialog_edit').dialog({
+                title: '修改轮滚图片',
+                width: 800,
+                closed: false,
+                cache: false,
+                href: '/public/couponPiclungun/editFrom/' + curRow.Id,
+                iconCls: 'icon-edit',
+                resizable: true,
+                modal: true,
+                buttons: [{
+                    text: '保存',
+                    handler: function() {
+                        edit()
+                        return false;
+                    }
+                }, {
+                    text: '取消',
+                    handler: function() {
+                        $('#couponPiclungun_dialog_edit').dialog("close");
+                    }
+                }]
+            });
+        } else {
+            $.messager.alert('系统信息', '请选择一条数据', 'info');
+        }
+    }
+
+    function detailCouponPiclungunPanel() {
+        /*var curRow = $('#couponPiclungunList_datagrid').datagrid('getSelected');
+        if (curRow) {
+            $('#couponPiclungun_dialog_detail').dialog({
+                title: '轮滚图片明细',
+                width: 800,
+                closed: false,
+                cache: false,
+                href: '/public/couponPiclungun/detailFrom/' + curRow.Id,
+                iconCls: 'icon-search',
+                resizable: true,
+                modal: true,
+                buttons: [{
+                    text: '关闭',
+                    handler: function() {
+                        $('#couponPiclungun_dialog_detail').dialog("close");
+                    }
+                }]
+            });
+        } else {
+            $.messager.alert('系统信息', '请选择一条数据', 'info');
+        }*/
+    }
+
+    function delSelCouponPiclungun() {
+        var curRow = $('#couponPiclungunList_datagrid').datagrid('getSelected');
+        if (curRow) {
+            $.messager.confirm('确认','您确认想要删除记录吗？',function(r){    
+                if (r){    
+                    $.messager.progress(); // 显示进度条  
+                    $.get("/public/couponPiclungun/del/"+curRow.Id, function(data) {
+                        $.messager.progress('close'); // 如果提交成功则隐藏进度条
+                        var flag = "error"
+                        if(data.success){
+                            $('#couponPiclungunList_datagrid').datagrid('reload');
+                            flag = "info"
+                        } 
+                        $.messager.alert('系统信息', data.message, flag);
+                    });  
+                }    
+            }); 
+        } else {
+            $.messager.alert('系统信息', '请选择一条数据', 'info');
+        }
+    }
+    </script>
+</body>
+
+</html>

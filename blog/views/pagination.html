@@ -1,0 +1,98 @@
+<style type="text/css">
+.nextPage {
+    color: #FFC107;
+    line-height: 50px;
+    font-size: 30px;
+    -webkit-transition: font-size 0.25s ease-out 0s;
+    -moz-transition: font-size 0.25s ease-out 0s;
+    transition: font-size 0.25s ease-out 0s;
+    cursor: pointer;
+}
+
+.nextPage:hover {
+    font-weight: 900;
+}
+
+.nextPageAnimation {
+    -webkit-animation: nextPage 1s infinite linear forwards;
+    -moz-animation: nextPage 1s infinite linear forwards;
+    animation: nextPage 1s infinite linear forwards;
+}
+
+.nextPageIconCss {
+    color: #388E3C;
+}
+
+@-webkit-keyframes nextPage {
+    0% {
+        background: linear-gradient(90deg, #fff, #FFC107 20%, #fff);
+    }
+    30% {
+        background: linear-gradient(90deg, #fff, #FFC107 50%, #fff);
+    }
+    60% {
+        background: linear-gradient(90deg, #fff, #FFC107 80%, #fff);
+    }
+    100% {
+        background: linear-gradient(90deg, #fff, #FFC107 90%, #fff);
+    }
+}
+
+@-o-keyframes nextPage {
+    0% {
+        background: linear-gradient(90deg, #fff, #FFC107 20%, #fff);
+    }
+    30% {
+        background: linear-gradient(90deg, #fff, #FFC107 50%, #fff);
+    }
+    60% {
+        background: linear-gradient(90deg, #fff, #FFC107 80%, #fff);
+    }
+    100% {
+        background: linear-gradient(90deg, #fff, #FFC107 90%, #fff);
+    }
+}
+
+@-moz-keyframes nextPage {
+    0% {
+        background: linear-gradient(90deg, #fff, #FFC107 20%, #fff);
+    }
+    30% {
+        background: linear-gradient(90deg, #fff, #FFC107 50%, #fff);
+    }
+    60% {
+        background: linear-gradient(90deg, #fff, #FFC107 80%, #fff);
+    }
+    100% {
+        background: linear-gradient(90deg, #fff, #FFC107 90%, #fff);
+    }
+}
+
+@keyframes nextPage {
+    0% {
+        background: linear-gradient(90deg, #fff, #FFC107 20%, #fff);
+    }
+    30% {
+        background: linear-gradient(90deg, #fff, #FFC107 50%, #fff);
+    }
+    60% {
+        background: linear-gradient(90deg, #fff, #FFC107 80%, #fff);
+    }
+    100% {
+        background: linear-gradient(90deg, #fff, #FFC107 90%, #fff);
+    }
+}
+</style>
+<!-- 分页 -->
+<div id="pagination" style="width: auto;height: 50px;text-align: center;position:relative;margin-top: 24px;" class="dark-primary-color">
+    <!-- <i onMouseDown="this.className='nextPage iconfont nextPageIconCss'"  class="nextPage iconfont" title="下一页">&#xe621;</i> -->
+    <i class="nextPage iconfont" style="margin-right:24px;" title="上一页" onclick="nextPageAnimation();nextPage('pre');">&#xe620;</i>
+    <div style="height: 50px;width: 1px;margin-left: 24px;margin-right: 24px;float: left;cursor: default;position:relative;left:50%;" class="line-divider-color"></div>
+    <i class="nextPage iconfont" style="margin-left:24px;" title="下一页" onclick="nextPageAnimation();nextPage('next');">&#xe621;</i>
+</div>
+<script type="text/javascript">
+function nextPageAnimation() {
+    $("#pagination").addClass("nextPageAnimation");
+
+}
+</script>

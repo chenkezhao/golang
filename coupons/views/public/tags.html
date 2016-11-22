@@ -1,0 +1,220 @@
+<style type="text/css">
+    .goods-category{
+        width: 1200px;
+        min-height:30px;
+        margin:0 auto;
+        margin-top:4px;
+    }
+    .goods-category>ul{
+        height: 100%;
+        line-height: 20px;
+        padding: 0px;
+        margin: 0px;
+    }
+    .goods-category>ul>li{
+        display: inline-block;
+        padding: 0;
+        border: 0;
+        cursor: pointer;
+        line-height: 30px;
+        text-align: center;
+        margin-right: 8px;
+        font-size: 12px;
+    }
+    .goods-tags{
+        width: 1200px;
+        height:36px;
+        margin:0 auto;
+        margin-top:4px;
+    }
+    .goods-tags>ul{
+        height: 100%;
+        line-height: 20px;
+        padding: 0px;
+        margin: 0px;
+    }
+    .goods-tags>ul>li{
+        display: inline-block;
+        padding: 0;
+        border: 0;
+        cursor: pointer;
+        line-height: 36px;
+        text-align: center;
+        margin-left: 8px;
+        font-size: 12px;
+    }
+    .goods-tags .tag-flag{
+        background: url(/static/img/select_icon.png) no-repeat;
+        background-position-x: 0px;
+        background-position-y: 0px;
+        width: 13px;
+        height: 13px;
+        overflow: hidden;
+        display: block;
+        float: left;
+        margin-top: 10px;
+        margin-right: 4px;
+    }
+    .goods-block .look-buy-btn{
+        position: absolute;
+        right: 0;
+        width: 0;
+        height: 30px;
+        text-align: center;
+        color: #FFF;
+        font-size: 16px;
+        opacity: 0;
+        transition: width .2s, opacity .2s, background-color .2s;
+        line-height: 30px;
+    }
+    .goods-block:hover .look-buy-btn {
+        width: 150px;
+        opacity: 1;
+    }
+    .goods-block .coupon{
+        padding: 4px;
+        overflow: hidden;
+        margin: 0;
+        font-size: 12px;
+    }
+</style>
+<!-- 商品图片信息
+<div style="width: 1200px;height:200px;margin:0 auto;margin-top:4px;background: url(https://img.alicdn.com/imgextra/i1/2508158775/TB20qjFqpXXXXXgXFXXXXXXXXXX_!!2508158775.jpg) top center no-repeat;background-size: 100% 100%;" class="divider-color"></div>
+ -->
+ {{if .Piclungun}}
+<div style="width: 1200px;height:200px;margin:0 auto;margin-top:4px;background:#fff;"  class="divider-color">
+    <div style="position: relative;width: 100%;height: 100%;">
+        <div class="productRoll">
+            {{range $i,$p :=.Piclungun}}
+                <img src="{{$p.Picpath}}" data-caption="#htmlCaption{{$i}}" />
+            {{end}}
+        </div>
+    </div>
+</div>
+{{end}}
+<!-- 分类 -->
+<div class="goods-category">
+    <ul>
+
+        <!-- <li>
+            <a href="javascript:void(0)" class="active">全部优惠（1904）</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" class="primary-text-color">服装（467）</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" class="primary-text-color">母婴（251）</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" class="primary-text-color">化妆品（94）</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" class="primary-text-color">居家（450）</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" class="primary-text-color">鞋包配饰（273）</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" class="primary-text-color">美食（129）</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" class="primary-text-color">文体车品（116）</a>
+        </li>
+        <li>
+            <a href="javascript:void(0)" class="primary-text-color">数码家电（124）</a>
+        </li> -->
+
+        {{range $i,$c := .CategoryInfo}}
+            <li>
+                <a href="javascript:void(0)"  id="{{$c.Category.Id}}" class="primary-text-color">{{$c.Category.Name}}（{{$c.Count}}）</a>
+            </li>
+        {{end}}
+    </ul>
+</div>
+<!-- 标签 -->
+{{if .SecondTag}}
+<div class="goods-tags divider-dashed-color">
+    <ul>
+    <!-- 
+        <li><a href="javascript:void(0)" class="active">标签</a></li>
+        <li><a href="javascript:void(0)"  class="secondary-text-color"><span style="background: url(http://cms3.qingtaoke.com/images/select_icon.png) 0 -13px no-repeat;"></span>标签</a></li>
+        <li><a href="javascript:void(0)"  class="secondary-text-color"><span style="background: url(http://cms3.qingtaoke.com/images/select_icon.png) 0 -13px no-repeat;"></span>标签</a></li>
+        <li><a href="javascript:void(0)"  class="secondary-text-color"><span style="background: url(http://cms3.qingtaoke.com/images/select_icon.png) 0 -13px no-repeat;"></span>标签</a></li>
+     -->
+        {{range $i,$st := .SecondTag}}
+            <li>
+                <a href="javascript:void(0)" id="{{$st.Id}}" class="secondary-text-color">
+                <span class="tag-flag"></span>{{$st.Name}}
+                </a>
+            </li>
+        {{end}}
+    </ul>
+</div>
+{{end}}
+<!-- content list -->
+<div id="content">
+    {{range $index,$gss :=.CouponInfos}}
+        {{range $i,$g :=$gss}}
+        <!-- 商品块......................start-->
+        <div class="goods-block divider-color">
+            <a target="_blank" href="javascript:void(0)">
+                <img src="{{$g.Picpaths}}">
+                <span class="mask"></span>
+            </a>
+            <div style="width: 100%;height: 40px;">
+                <a href="javascript:void(0)" class="title divider-dashed-color-bottom primary-text-color" title="{{$g.Title}}">
+                    <i class="taobao"></i>
+                    <span>{{$g.Title}}</span>
+                </a>
+            </div>
+            <div style="width: 100%;height: 44px;position: absolute;">
+                <p class="coupon">
+                    <span style="float: left;">优惠券<b class="accent-color-text"><i>¥</i>{{$g.Couponprice}}</b>元</span>
+                    <span style="float: right;" class="primary-text-color">已有<font class="accent-color-text">{{$g.Buycount}}</font>购买</span>
+                </p>
+                <p class="price" style="clear: both;font-size: 15px;padding: 4px;">
+                    <span class="buy-price">券后价：<b class="accent-color-text"><i>¥</i>{{subtraction $g.Price $g.Couponprice}}</b></span>
+                    <span class="online-price" class="primary-text-color">正常售价：¥{{$g.Price}}</span>
+                    <a class="look-buy-btn" href="{{$g.Buylink}}" target="_blank">去购买</a>
+                </p>
+            </div>
+        </div>
+        <!-- 商品块......................end-->
+        {{end}}
+        <div style="clear:both;">
+            <!-- 设置自动高度，自动加长。如果设置了浮动，在未尾使用clear:both;即可，如些代码 -->
+        </div>
+    {{end}}
+    </div>
+
+    <script type="text/javascript">
+        $(function(){
+            //标签
+            $(".goods-tags li>a[id={{.stagid}}]").children().css({"background-position-y":"-13px"})
+            $(".goods-tags li>a").click(function(){
+                var temp ="0"
+                if($(this).children().css("background-position-y")=="0px"){
+                    temp = "-13px"
+                    window.location.href = "/index/{{.tagid}}/"+$(this).attr("id")+"/{{.categoryid}}/1"
+                    return
+                }
+                $(this).children().css({"background-position-y":temp})
+                window.location.href = "/index/{{.tagid}}/0/{{.categoryid}}/1"
+            });
+
+
+            //分类
+            $(".goods-category li>a").addClass("primary-text-color")
+            $(".goods-category li>a").removeClass("accent-color-text")
+            $(".goods-category li>a[id={{.categoryid}}]").removeClass("primary-text-color")
+            $(".goods-category li>a[id={{.categoryid}}]").addClass("accent-color-text")
+            $(".goods-category li>a").click(function(){
+                if($(this).attr("class")=="primary-text-color"){
+                    window.location.href = "/index/{{.tagid}}/{{.stagid}}/"+$(this).attr("id")+"/1"
+                    return
+                }
+                $(this).children().css({"background-position-y":temp})
+                window.location.href = "/index/{{.tagid}}/{{.stagid}}/{{.categoryid}}/1"
+            });
+        })
+    </script>

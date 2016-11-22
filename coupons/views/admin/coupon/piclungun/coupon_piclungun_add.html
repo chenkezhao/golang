@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>新增轮滚图片</title>
+</head>
+
+<body>
+    <form id="couponPiclungun_add_from" method="post"  enctype="multipart/form-data">
+        <table border=1 bordercolor=#dbe1eb style="border-collapse:collapse;width: 100%;height: auto;" class="table">
+            <tr style="height: 40px;">
+                <td style="text-align: right;">图片名称：</td>
+                <td>
+                    <input name="Name" class="easyui-validatebox" data-options="required:true" />
+                </td>
+                <td style="text-align: right;">图片标题：</td>
+                <td>
+                    <input name="Title" class="easyui-validatebox" />
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">排序号：</td>
+                <td>
+                    <input name="Seqno" class="easyui-numberbox" />
+                </td>
+                <td style="text-align: right;">状态：</td>
+                <td>
+                    <input name="Status" data-options="required:true" value="0">
+                </td>
+            </tr>
+            <tr style="height: 40px;">
+                <td style="text-align: right;">一级标签：</td>
+                <td>
+                    <input name="tagsid" data-options="required:true">
+                </td>
+                <td style="text-align: right;">上传图片：<br/><font color=#ff0000>或</font><br/>图片路径：</td>
+                <td>
+                    <div id="c_piclunggun_add_preview">
+                        <img id="c_piclunggun_add_imghead" src='/static/img/image.png' style="width: 50px;height: 50px">
+                    </div>
+                    <input id="c_piclunggun_add_file" type="file" name="file" accept="image/jpeg,image/png" style="width: 190px;height: 30px;display: none;" onchange="doPreview(this,'c_piclunggun_add_file','c_piclunggun_add_preview','c_piclunggun_add_imghead')" />
+                    <br/>
+                    <input type="button" onclick="$('#c_piclunggun_add_file').click();" value="点击上传图片" style="margin-left:0px;margin-top:-5px; width: 120px;height: 30px;font-size: 16px;" />
+                    <input name="Ishome" type="hidden" value="1">
+                    <input type="checkbox" onclick="var obj = $('#couponPiclungun_add_from input[name=Ishome]');var v = obj.val();v=='0'?obj.val('1'):obj.val('0');" />设置首页
+                    <br/>
+                    <br/>
+                    <span style="color:red">*图片大小不超过2MB</span>
+                    <br/>
+                    <span style="color:red">*缩略图片尺寸150*150</span>
+                    <input name="Picpath" style="width: 99%;" class="easyui-validatebox" placeholder="如果不上传图上，则请输入网络图片路径"/>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">描述：</td>
+                <td colspan="3">
+                    <textarea name="Detailinfo" style="width: 99%;height: 50px;position: relative;resize:none;" class="easyui-validatebox"></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="text-align: right;">备注：</td>
+                <td colspan="3">
+                    <textarea name="Remark" style="width: 99%;height: 50px;position: relative;resize:none;" class="easyui-validatebox"></textarea>
+                </td>
+            </tr>
+        </table>
+    </form>
+    <script type="text/javascript">
+    $(function() {
+        $('#couponPiclungun_add_from input[name=Status]').combobox({
+            method: "get",
+            panelHeight: 'auto',
+            editable: false,
+            url: '/static/json/comboboxStatusData.json',
+            valueField: 'id',
+            textField: 'text'
+        });
+        $('#couponPiclungun_add_from input[name=tagsid]').combobox({
+            method: "get",
+            panelHeight: 'auto',
+            editable: false,
+            url: '/public/couponTag/getYiJiTags',
+            valueField: 'Id',
+            textField: 'Name'
+        });
+    });
+
+
+
+
+    function add() {
+        // call 'submit' method of form plugin to submit the form  
+        $.messager.progress(); // 显示进度条  
+        $('#couponPiclungun_add_from').form('submit', {
+            url: '/public/couponPiclungun',
+            onSubmit: function(param) {
+                // do some check 
+                // return false to prevent submit;  
+                var isValid = $(this).form('validate');
+                if (!isValid) {
+                    $.messager.progress('close'); // 如果表单是无效的则隐藏进度条
+                    $.messager.alert('系统信息', "信息不完善，不允许操作！", "info");
+                }
+                return isValid; // 返回false终止表单提交
+
+            },
+            success: function(data) {
+                $.messager.progress('close'); // 如果提交成功则隐藏进度条
+                var data = eval('(' + data + ')'); // change the JSON string to javascript object 
+                var flag = "error"
+                if (data.success) {
+                    $('#couponPiclungunList_datagrid').datagrid('reload');
+                    $('#couponPiclungun_dialog_add').dialog("close");
+                    flag = "info"
+                }
+                $.messager.alert('系统信息', data.message, flag);
+            }
+        });
+    }
+    </script>
+</body>
+
+</html>

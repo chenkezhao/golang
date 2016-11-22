@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>赶紧剁手——超级优惠！</title>
+    <!-- jquery -->
+    <link rel="stylesheet" href="/static/third/iconfont/iconfont.css">
+    <script type="text/javascript" src="/static/third/jquery-3.1.1.min.js"></script>
+    <!-- 图片轮滚-->
+    <script type="text/javascript" src="/static/third/jquery.orbit/jquery.orbit-1.2.3.min.js"></script>
+    <link rel="stylesheet" href="/static/third/jquery.orbit/orbit-1.2.3.css">
+    <!-- 主题样式 -->
+    <link rel="stylesheet" href="/static/css/theme/default/theme_palette_red.css">
+    <style type="text/css">
+    .topBar {
+        font-size: 12px;
+    }
+    
+    .topBar ul {
+        color: #444;
+        margin: 0;
+        height: 100%;
+        line-height: 20px;
+        padding-left: 4px;
+    }
+    
+    .topBar ul>li {
+        float: left;
+        display: inline-block;
+        margin: 0 0 0 20px;
+        padding: 0;
+        border: 0;
+        cursor: pointer;
+    }
+    
+    .navBar ul {
+        height: 100%;
+        line-height: 20px;
+        padding: 0px;
+        margin: 0px;
+    }
+    
+    .navBar ul>li {
+        float: left;
+        display: inline-block;
+        padding: 0;
+        border: 0;
+        cursor: pointer;
+        line-height: 61px;
+        min-width: 200px;
+        text-align: center;
+    }
+    
+    .productRoll {
+        background: #A7A7A7 url('/static/third/jquery.orbit/orbit/loading.gif') no-repeat center center;
+        overflow: hidden;
+    }
+    
+    .productRoll>img,
+    .productRoll>div,
+    .productRoll>a {
+        display: none;
+    }
+    
+    .productRoll>img {
+        /* width: 697px;
+        height: 300px; */
+        width: 100%;
+        height: 100%;
+    }
+    
+    div.slider-nav span.right {
+        margin-left: 647px;
+    }
+    
+    .picTitl {
+        text-shadow: 1px 1px 2px #000000;
+        color: #fff;
+        margin: 3px 0;
+    }
+    
+    .picInfo {
+        text-shadow: 1px 1px 2px #000000;
+        color: #f0f0f0;
+        margin: 3px 0;
+    }
+    
+    .shareBar {
+        position: relative;
+        top: 144px;
+        left: 50%;
+        width: 130px;
+        margin-left: -65px;
+    }
+    
+    .navCategoryMenu ul {
+        padding: 0;
+        margin: 0;
+    }
+    
+    .navCategoryMenu ul>li {
+        display: block;
+        width: 100%;
+        height: 37px;
+        line-height: 37px;
+        font-size: 14px;
+    }
+    
+    .navCategoryMenu ul>li a {
+        display: block;
+        width: 80%;
+        margin: 0 auto;
+        height: 100%;
+        border-top: 1px dashed #E5E5E5;
+        overflow: hidden;
+        transition: color .2s;
+        text-decoration: none;
+    }
+    
+    
+    #updown {
+        position: fixed;
+        left: 90%;
+        top: 80%;
+        list-style-type: none;
+        cursor: pointer;
+        display: none;
+    }
+    
+    #updown>.up:hover {
+        color: #FF9800;
+    }
+    
+    .goods-block {
+        position: relative;
+        float: left;
+        margin-top: 20px;
+        margin-right: 5px;
+        margin-left: 5px;
+        background-color: #FFF;
+        transition: border-color .2s;
+        width: 290px;
+        height: 420px;
+    }
+    .goods-block>a>img{
+        width: 290px;
+        height: 290px;
+        border-style: none;
+    }
+    .goods-block .quan-btn{
+        left: 0;
+    }
+    .goods-block .buy-btn{
+        right: 0;
+    }
+    .goods-block .option-btn{
+        position: relative;
+        width: 100%;
+        height: 42px;
+    }
+    .goods-block .option-btn a{
+        text-decoration: none;
+        position: absolute;
+        display: block;
+        bottom: 0;
+        width: 50%;
+        height: 41px;
+        line-height: 41px;
+        text-align: center;
+        color: #FFF;
+        font-size: 14px;
+        transition: height .2s,line-height .2s;
+    }
+    .goods-block .option-btn a:hover{
+        height: 45px;
+        line-height: 45px;
+    }
+    .goods-block .price{
+        padding: 10px;
+        overflow: hidden;
+        margin: 0;
+    }
+    .goods-block .price span {
+        height: 24px;
+        line-height: 24px;
+        color: #2B2B2B;
+    }
+    .goods-block .price .buy-price {
+        float: left;
+    }
+    .goods-block .price .online-price {
+        float: right;
+        line-height: 32px;
+    }
+    .goods-block .price .buy-price b {
+        font-size: 24px;
+    }
+    .goods-block .title {
+        display: block;
+        width: 280px;
+        height: 40px;
+        margin: 0 5px;
+        line-height: 40px;
+        overflow: hidden;
+    }
+    .goods-block .title i {
+        float: left;
+        width: 16px;
+        height: 16px;
+        margin: 12px 5px 12px 0;
+        background-repeat: no-repeat;
+        background-position: 0 0;
+    }
+    .goods-block .title i.taobao {
+        background-image: url(http://cms3.qingtaoke.com/images/taobao.png);
+    }
+    .goods-block .title i.tmall {
+        background-image: url(http://cms3.qingtaoke.com/images/tmall.png);
+    }
+    .goods-block .mask:hover{
+        background-color: rgba(255,255,255,.1);
+    }
+    .goods-block .mask {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 290px;
+        height: 290px;
+        background-color: rgba(255,255,255,0);
+    }
+    #content{
+        width:1210px;
+        margin:0 auto;
+        min-height: 700px
+        margin-top:24px;
+    }
+    #content .content-title {
+        width: 1187px;
+        height: 24px;
+        margin-top: 10px;
+        padding-left: 10px;
+        line-height: 0px;
+        float: left;
+        margin-left: 5px;
+        padding-bottom: 4px;
+    }
+    #content .content-title h1 {
+        display: inline-block;
+        font-size: 20px;
+    }
+    #content .content-title span{
+        font-size: 12px;
+    }
+
+    #search {
+        position: relative;
+        height: 100%;
+        width: 529px;
+        float: left;
+    }
+    #search>form{
+        height: 40px;
+        width: 303px;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-left: -150px;
+    }
+    #search input {
+        height: 38px;
+        width: 260px;
+        line-height: 38px;
+        padding: 0 20px;
+        border-radius: 20px;
+        font-size: 12px;
+        color: #333;
+        outline: 0;
+        margin: 0;
+    }
+    #search button {
+        position: absolute;
+        left: 242px;
+        top: 0;
+        width: 60px;
+        height: 40px;
+        border: 0 none;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        color: #333;
+    }
+    </style>
+</head>
+
+<body>
+    <div style="width: 100%;min-width: 1200px;" class="default-primary-color text-primary-color accent-color-border-bottom">
+        <!-- top bar -->
+        <div class="topBar" style="width:1200px;margin:0 auto;height: 20px;">
+            <div style="height: 100%;width: auto;line-height: 20px;float:left;">
+                加入爱购物QQ群，享内部优惠更便宜哦<a target="_blank" style="height: 22px;" href="http://jq.qq.com/?_wv=1027&amp;k=419JHc6"><img border="0" style="float: right;" src="https://img.alicdn.com/imgextra/i1/2508158775/TB2SfmWqFXXXXb4XpXXXXXXXXXX_!!2508158775.png"></a>
+            </div>
+            <div style="height: 100%;width: 40%;float:left;">
+                <marquee style="float:left;width: 80%;margin: auto 10%;height: 100%;line-height: 20px;" direction="left" onmouseover="stop()" onmouseout="start()">
+                    <b>提示：</b>7点准备开抢...</marquee>
+            </div>
+            <div style="height: 100%;width:auto;float:right;">
+                <ul>
+                    <li>
+                        <a href="javascript:void(0)" class="text-primary-color" onclick="SetHome(this,window.location)" title="将本站设为首页">设为首页</a>
+                    </li>
+                    <li>
+                        <a href="javascript:void(0)" class="text-primary-color" onclick="shoucang(document.title,window.location)" title="加入收藏，方便下次打开">加入收藏</a>
+                    </li>
+                    <li><a class="text-primary-color" href="http://wpa.qq.com/msgrd?v=3&uin=310771881&site=qq&menu=yes" target="_blank">遇到购物问题？联系我 ></a></li>
+                </ul>
+            </div>
+        </div>
+        <!-- logo -->
+        <div style="width:1200px;margin:0 auto;height: 100px;">
+            <div style="height: 100%;width: 277px;float:left;position: relative;">
+                <!-- logo -->
+                <img src="/static/img/logo.png" style="width: 100%;height: 100%;border-style: none;">
+            </div>
+            <div id="search" style="height: 100%;width: 529px;float:left;">
+                <form action="/index.php?r=index/index">
+                    <input type="text" value="" name="kw" placeholder="搜优惠券">
+                    <button type="submit" class="cnzzCounter" data-cnzz-type="54" data-cnzz="1"></button>
+                </form>
+            </div>
+            <div style="height: 100%;width: 388px;float:left;">
+                <!-- 商家信用信息 -->
+                <img src="/static/img/business.png" style="width: 100%;height: 100%;border-style: none;">
+            </div>
+        </div>
+        <!-- nav bar -->
+        <div class="navBar" style="width:1200px;margin:0 auto;height: 60px;margin-top: 26px;">
+            <ul>
+                <li id="0">今日上新</li>
+                <!--
+                <li>领券优惠直播</li>
+                <li>超级人气榜</li>
+                <li>特卖精选</li>
+                -->
+                {{range $i,$t :=.Tags}}
+                    <li id="{{$t.Id}}">{{$t.Name}}</li>
+                {{end}}
+            </ul>
+        </div>
+    </div>
+    <div>
+        {{.LayoutContent}}
+    </div>
+
+    {{if .totalPages}}
+    <div style="width: 1200px;min-height:50px;margin:30px auto 0px auto;text-align: center;">
+        {{template "public/paginator.html" .}}
+    </div>
+    {{end}}
+    <div style="width: 100%;min-width: 1200px;height:200px;margin-top:60px;" class="accent-color-border-top dark-primary-color"></div>
+    <div>
+        <ul id="updown" class="secondary-text-color">
+            <li class="up"><b>置顶</b></li>
+        </ul>
+    </div>
+    <script type="text/javascript">
+    $(function() {
+        /*置顶*/
+        $(window).scroll(function() {
+            if ($(window).scrollTop() >= 100) {
+                $('#updown').fadeIn(300);
+            } else {
+                $('#updown').fadeOut(300);
+            }
+        });
+        $('#updown .up').click(function() {
+            $('html,body').animate({
+                scrollTop: '0px'
+            }, 800);
+        });
+
+        flagCurNavTab({{.tagid}})
+
+
+        //点击导航tab，切换数据
+        $(".navBar li").click(function(){
+            window.location.href = "/index/"+$(this).attr("id")+"/0/0/1/"
+        });
+
+    });
+
+    function flagCurNavTab(tagid) {
+        //选中当前导航tab
+        $(".navBar li").removeClass("navBarActivite")
+        $(".navBar #"+tagid).addClass("navBarActivite")
+    }
+    //加载
+    window.onload = function() {
+        //产品推荐
+        $('.productRoll').orbit({
+            bullets: true //开启图片总数导航
+        });
+    }
+
+     // 设置为主页
+    function SetHome(obj, vrl) {
+        try {
+            obj.style.behavior = 'url(#default#homepage)';
+            obj.setHomePage(vrl);
+        }
+        catch (e) {
+            if (window.netscape) {
+                try {
+                    netscape.security.PrivilegeManager.enablePrivilege("UniversalXPConnect");
+                }
+                catch (e) {
+                    alert("此操作被浏览器拒绝！\n请在浏览器地址栏输入“about:config”并回车\n然后将 [signed.applets.codebase_principal_support]的值设置为'true',双击即可。");
+                }
+                var prefs = Components.classes['@mozilla.org/preferences-service;1'].getService(Components.interfaces.nsIPrefBranch);
+                prefs.setCharPref('browser.startup.homepage', vrl);
+            } else {
+                alert("您的浏览器不支持，请按照下面步骤操作：1.打开浏览器设置。2.点击设置网页。3.输入：" + vrl + "点击确定。");
+            }
+        }
+    }
+    // 加入收藏 兼容360和IE6
+    function shoucang(sTitle, sURL) {
+        try {
+            window.external.addFavorite(sURL, sTitle);
+        }
+        catch (e) {
+            try {
+                window.sidebar.addPanel(sTitle, sURL, "");
+            }
+            catch (e) {
+                alert("加入收藏失败，请使用Ctrl+D进行添加");
+            }
+        }
+    }
+    </script>
+</body>
+
+</html>
